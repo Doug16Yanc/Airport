@@ -1,12 +1,14 @@
 package entities
 
-open class Cliente {
-    var id: Long = 1
-    var nome : String = ""
-    var cpf : String = ""
-    var rg : String = ""
+import java.util.*
 
-    constructor(id: Long, nome: String, cpf: String, rg: String){
+open class Cliente {
+    var id: UUID
+    var nome : String = ""
+    var cpf : Long = 0
+    var rg : Long = 0
+
+    constructor(id: UUID, nome: String, cpf: Long, rg: Long){
         this.id = id
         this.nome = nome
         this.cpf = cpf
@@ -15,10 +17,10 @@ open class Cliente {
 
     override fun toString(): String {
         return "Dados do cliente:\n" +
-                "ID do cliente: '$id'," +
-                "Nome: '$nome'," +
-                "Cadastro de pessoa física (CPF): '$cpf', " +
-                "Número de registro geral (RG): '$rg'"
+                "ID do cliente: $id\n" +
+                "Nome: $nome\n" +
+                "Cadastro de pessoa física (CPF): $cpf\n" +
+                "Número de registro geral (RG): $rg\n"
     }
 
 }

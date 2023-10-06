@@ -6,9 +6,12 @@ import java.util.*
 import kotlin.collections.ArrayList
 
 
+val poltronas: Int = 0
 val sc = Scanner(System.`in`)
 val list1 : MutableList<Cliente> = ArrayList()
 val list2 : MutableList<Passageiro> = ArrayList()
+val econ = Array(poltronas) {false}
+val exec = Array(poltronas) {false}
 
 fun main(args: Array<String>){
     executaInteracao()
@@ -18,7 +21,6 @@ fun main(args: Array<String>){
 private fun executaInteracao(){
 
     val poltronas = 10
-    val econ = Array(poltronas) {false}
 
     do{
         println("******************************************************\n")
@@ -45,32 +47,25 @@ private fun executaInteracao(){
 
 }
 
-fun generateUniqueID() : Long {
-
-    var nextUniqueID : Long =  19785
-    val incremento : Long = 8963
-    val uniqueID = nextUniqueID
-    nextUniqueID += incremento
-    return uniqueID.toLong()
-
+fun gerarID() : UUID{
+    return UUID.randomUUID()
 }
-
 private fun cadastrarCliente(){
     println("Solicitando operação para realizar cadastro de cliente:\n")
 
-    var clienteID = generateUniqueID()
-    println("Id do cliente: ${clienteID}")
+    println("Nome do cliente: ")
+    var nome = sc.next()
 
     sc.nextLine()
 
-    println("Nome do cliente: ")
-    var nome = sc.nextLine()
-
     println("CPF do cliente: ")
-    var cpf = sc.nextLine()
+    var cpf = sc.nextLong()
 
     println("RG do cliente:")
-    var rg = sc.nextLine()
+    var rg = sc.nextLong()
+
+    var clienteID = gerarID()
+    println("Id do cliente: ${clienteID}")
 
     val cliente = Cliente(clienteID, nome, cpf, rg)
 
@@ -79,28 +74,40 @@ private fun cadastrarCliente(){
 }
 
 private fun venderPassagem(){
-
-    var cliente = null
-
     println("Solicitando operação para vender passagem:\n")
 
-    println("Informe o ID do cliente:")
-    var id = sc.nextLine()
+    println("Informe o CPF do cliente:")
+    var CPF = sc.nextLong()
 
-    if (!list1.isEmpty()){
-        for (cliente in list1){
-            println("Cliente encontrado no sistema de gerenciamento com sucesso.\n")
+    val clienteEncontrado = list1.find { it.cpf == CPF }
 
-            println("Dados cadastrados:")
+    if (clienteEncontrado != null) {
+        println("Cliente encontrado no sistema de gerenciamento com sucesso.\n")
 
-            println(cliente)
+        println("Origem do passageiro: ")
+        var origem = sc.nextLine()
+
+        println("Destino do passageiro: ")
+        var destino = sc.nextLine()
+
+        println("Digite a escolha do passageiro:\n" +
+                "1 - Classe econômica:\n" +
+                "2 - Classe executiva:\n")
+        var escolha = sc.nextInt()
+
+        when(escolha){
+            1 -> escolherEconomica(econ)
+            2 -> escolherExecutiva(exec)
         }
-    }
-    else{
-        println("Cliente não encontrado, portanto, não foi possível realizar operação a fim de vender" +
-                "passagem. Realize antes o cadastro de cliente.\n")
-    }
 
+        val passageiro = Passageiro( origem, destino)
+
+        list2.add(passageiro)
+
+    }
+    else {
+        println("Cliente não encontrado, portanto, não foi possível realizar operação a fim de vender passagem. Realize antes o cadastro de cliente.\n")
+    }
 }
 
 private fun encerrarPrograma(){
@@ -138,6 +145,27 @@ private fun escolherEconomica(econ: Array<Boolean>){
     }
 }
 
-private fun escolherExecutiva(){
+private fun escolherExecutiva(exec: Array<Boolean>) {
+    println("Distribuição de poltronas:\n")
 
+    for (i in exec.indices){
+        val estado = if (exec[i]) " \u001B[42m - Ocupado \u001B[0m\n"  else "\u001B[41m - Livre \u001B[0m\n"
+        println("${i + 1}$estado")
+    }
+
+    println("Escolha um número de poltrona:\n")
+    var escolha = sc.nextInt()
+
+    if (escolha >= 1 && escolha <= exec.size){
+        if (exec[escolha - 1]){
+            println("Poltrona já ocupada.\n")
+        }
+        else{
+            println("Poltrona ${escolha} ocupada com sucesso.\n")
+            exec[escolha - 1] = true
+        }
+    }
+    else{
+        println("Número de poltrona não disponível.\n")
+    }
 }

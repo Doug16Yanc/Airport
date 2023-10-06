@@ -1,13 +1,15 @@
 package entities
 
-class Passageiro : Cliente {
+
+class Passageiro {
     var origem : String = ""
     var destino : String = ""
+    var poltrona : Int = 0
 
-    constructor(id : Long, nome : String, cpf : String, rg : String, origem : String, destino : String):
-    super(id, nome, cpf, rg)
+    constructor( origem: String, destino: String, poltrona : Int)
     {
         this.origem = origem
         this.destino = destino
+        this.poltrona = poltrona
     }
 }
