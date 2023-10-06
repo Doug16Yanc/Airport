@@ -4,12 +4,14 @@ package entities
 class Passageiro {
     var origem : String = ""
     var destino : String = ""
-    var poltrona : Int = 0
 
-    constructor( origem: String, destino: String, poltrona : Int)
+    constructor(){
+
+    }
+
+    constructor( origem: String, destino: String)
     {
         this.origem = origem
         this.destino = destino
-        this.poltrona = poltrona
     }
 }

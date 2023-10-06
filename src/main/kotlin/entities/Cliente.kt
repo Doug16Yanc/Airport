@@ -2,18 +2,12 @@ package entities
 
 import java.util.*
 
-open class Cliente {
-    var id: UUID
-    var nome : String = ""
-    var cpf : Long = 0
-    var rg : Long = 0
+import java.util.UUID
 
-    constructor(id: UUID, nome: String, cpf: Long, rg: Long){
-        this.id = id
-        this.nome = nome
-        this.cpf = cpf
-        this.rg = rg
-    }
+open class Cliente(val id: UUID, var nome: String, var cpf: Long, var rg: Long) {
+
+   constructor() : this(UUID.randomUUID(), "", 0, 0)
+
 
     override fun toString(): String {
         return "Dados do cliente:\n" +
