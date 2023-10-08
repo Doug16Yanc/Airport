@@ -1,7 +1,13 @@
 package entities
 
-import java.util.*
 
-class Viagem (val id : UUID, poltrona : Int) {
-    constructor() : this(UUID.randomUUID(), 0)
+open class Viagem {
+    var id : Int = 0
+    var poltrona : Int = 0
+    constructor(){
+    }
+    constructor(id : Int, poltrona : Int){
+        this.id = id
+        this.poltrona = poltrona
+    }
 }

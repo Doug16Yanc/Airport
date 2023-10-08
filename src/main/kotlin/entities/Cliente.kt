@@ -1,12 +1,20 @@
 package entities
 
-import java.util.*
 
-import java.util.UUID
+open class Cliente {
+    var id : Int = 0
+    var nome: String = ""
+    var cpf: Long = 0
+    var rg: Long = 0
 
-open class Cliente(val id: UUID, var nome: String, var cpf: Long, var rg: Long) {
+    constructor(){}
 
-   constructor() : this(UUID.randomUUID(), "", 0, 0)
+    constructor(id: Int, nome: String, cpf: Long, rg: Long){
+        this.id = id
+        this.nome = nome
+        this.cpf = cpf
+        this.rg = rg
+    }
 
 
     override fun toString(): String {
@@ -15,6 +23,10 @@ open class Cliente(val id: UUID, var nome: String, var cpf: Long, var rg: Long) 
                 "Nome: $nome\n" +
                 "Cadastro de pessoa física (CPF): $cpf\n" +
                 "Número de registro geral (RG): $rg\n"
+    }
+
+    operator fun get(i: Int) {
+
     }
 
 }

@@ -4,6 +4,7 @@ import entities.*
 import java.lang.System.exit
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.random.Random
 
 
 val poltronas: Int = 10
@@ -12,31 +13,25 @@ val list1 : MutableList<Cliente> = ArrayList()
 val list2 : MutableList<Passageiro> = ArrayList()
 val econ = Array(poltronas) {false}
 val exec = Array(poltronas) {false}
+val cliente = Cliente()
+val passageiro = Passageiro()
 
 fun main(){
-    val cliente = Cliente()
-    val passageiro = Passageiro()
-    executaInteracao(cliente, passageiro)
-}
-
-
-private fun executaInteracao(cliente: Cliente, passageiro: Passageiro){
-
     do{
         println("******************************************************\n")
         println("Bem-vindo(a) ao sistema de vendas de passagens aéreas\n")
         println("Por favor, selecione uma alternativa:\n")
-        println("  |     1 - Cadastrar dados de cliente:        | \n")
+        println("  |    1 - Cadastrar dados de cliente:        | \n")
         println("  |    2 - Vender passagem:                    | \n")
-        println("  |     3 - Visualizar ocupações no avião:     | \n")
-        println("  |     4 - Encerrar aplicação                 | \n")
+        println("  |    3 - Visualizar ocupações no avião:     | \n")
+        println("  |    4 - Encerrar aplicação                 | \n")
         println("******************************************************\n")
 
         var opcao = sc.nextInt()
 
         when(opcao){
-            1 -> cadastrarCliente()
-            2 -> venderPassagem(cliente, passageiro)
+            1 -> cadastrarCliente(list1, sc)
+            2 -> venderPassagem(list1, list2, sc)
             3 -> visualizarOcupacao()
             4 -> encerrarPrograma()
             else -> println("Opção impossível.\n")
@@ -47,34 +42,55 @@ private fun executaInteracao(cliente: Cliente, passageiro: Passageiro){
 
 }
 
-fun gerarID() : UUID{
-    return UUID.randomUUID()
+
+fun gerarID(cliente: List<Cliente>): Int {
+    var num = 0
+
+    var entrada = Random.nextInt(100000, 1000000)
+    var aux = true
+
+    while (entrada != 1) {
+        for (i in 0 until cliente.size) {
+            if (entrada == cliente[i].id) {
+                aux = false
+            }
+        }
+
+        if (aux) {
+            return entrada
+        } else {
+            entrada = Random.nextInt(100000, 1000000)
+        }
+    }
+
+    return entrada
 }
-private fun cadastrarCliente(){
+
+fun cadastrarCliente(list1: MutableList<Cliente>, sc: java.util.Scanner) {
     println("Solicitando operação para realizar cadastro de cliente:\n")
 
     println("Nome do cliente: ")
-    var nome = sc.next()
+    val nome = sc.next()
 
     sc.nextLine()
 
     println("CPF do cliente: ")
-    var cpf = sc.nextLong()
+    val cpf = sc.nextLong()
 
     println("RG do cliente:")
-    var rg = sc.nextLong()
+    val rg = sc.nextLong()
 
-    var clienteID = gerarID()
+    val id = gerarID(list1)
+    val cliente = Cliente(id, nome, cpf, rg)
 
-    val cliente = Cliente(clienteID, nome, cpf, rg)
+    println("Id do cliente: ${cliente.id}\n")
 
     println(cliente)
 
     list1.add(cliente)
-
 }
 
-private fun venderPassagem(cliente: Cliente, passageiro: Passageiro){
+private fun venderPassagem(list1: MutableList<Cliente>, list2: MutableList<Passageiro>, sc: java.util.Scanner){
     println("Solicitando operação para vender passagem:\n")
 
     println("Informe o CPF do cliente:")
@@ -154,7 +170,7 @@ private fun escolherEconomica(econ: Array<Boolean>, cliente : Cliente, passageir
         else{
             println("Poltrona ${escolha} ocupada com sucesso.\n")
             econ[escolha - 1] = true
-            gerarPassagemEconomica(cliente, passageiro, escolha)
+            gerarPassagemEconomica(list1, list2, escolha)
         }
     }
     else{
@@ -163,8 +179,7 @@ private fun escolherEconomica(econ: Array<Boolean>, cliente : Cliente, passageir
 
 }
 
-fun gerarPassagemEconomica(cliente : Cliente, passageiro : Passageiro, escolha : Int) {
-    val viagemid = gerarID()
+fun gerarPassagemEconomica(list1: MutableList<Cliente>, list2: MutableList<Passageiro>, escolha : Int) {
     println("*******************Passagem***********************\n")
     println("Nome do passageiro: ${cliente.nome}\n" +
             "Cadastro de pessoa física: ${cliente.cpf}\n" +
@@ -173,7 +188,7 @@ fun gerarPassagemEconomica(cliente : Cliente, passageiro : Passageiro, escolha :
             "Origem : ${passageiro.origem}\n" +
             "Destino : ${passageiro.destino}\n" +
             "Número de poltrona : ${escolha}\n" +
-            "Id da viagem : ${viagemid}\n")
+            "Id da viagem :n")
     println("************************************************\n")
     fornecerDicas()
 
@@ -198,7 +213,7 @@ private fun escolherExecutiva(exec: Array<Boolean>, cliente: Cliente, passageiro
             println("Poltrona ${escolha} ocupada com sucesso.\n")
             exec[escolha - 1] = true
 
-            gerarPassagemExecutiva(cliente, passageiro, escolha)
+            gerarPassagemExecutiva(list1, list2, escolha)
         }
     }
     else{
@@ -206,8 +221,7 @@ private fun escolherExecutiva(exec: Array<Boolean>, cliente: Cliente, passageiro
     }
 }
 
-private fun gerarPassagemExecutiva(cliente: Cliente, passageiro: Passageiro, escolha : Int){
-    val viagemid = gerarID()
+private fun gerarPassagemExecutiva(list1: MutableList<Cliente>, list2: MutableList<Passageiro>, escolha : Int) {
     println("*******************Passagem***********************\n")
     println("Nome do passageiro: ${cliente.nome}\n" +
             "Cadastro de pessoa física: ${cliente.cpf}\n" +
@@ -216,7 +230,7 @@ private fun gerarPassagemExecutiva(cliente: Cliente, passageiro: Passageiro, esc
             "Origem : ${passageiro.origem}\n" +
             "Destino : ${passageiro.destino}\n" +
             "Número de poltrona : ${escolha}\n" +
-            "Id da viagem : ${viagemid}\n")
+            "Id da viagem :\n")
     println("************************************************\n")
     fornecerDicas()
 
